@@ -22,7 +22,6 @@ slider2.addEventListener("input", function() {
   console.log(slider2Value);
 });
 
-
 var bullet = null;
 var bullet2 = null;
      
@@ -38,7 +37,8 @@ document.addEventListener('keydown', function(event) {
     color: 'black',
     speedX: 10,
     speedY:5,
-    gravity: 0.15,
+    // gravity: 0.15,
+    gravity: sliderValue,
     // speedY:0,
     // gravity: 0,
     gravitySpeed:0,
@@ -57,9 +57,10 @@ document.addEventListener('keydown', function(event) {
       color: 'black',
       speedX: 10,
       speedY:5,
-      gravity: slider2Value,
+      // gravity: 0.5,   
+      // gravity: slider2Value,
       // speedY:0,
-      // gravity: 0,
+      // gravity: 0.15,
       gravitySpeed:0,
       damage:10,
     };
@@ -108,11 +109,15 @@ function update() {
       bullet.y < player2.y + player2.height &&
       bullet.y + bullet.height > player2.y
     ){
-      console.log("damage to player2")
       player.hp = player.hp - bullet.damage
+      console.log(player.hp)
     }
     if (bullet.x < 0 || bullet.y > canvas.height /1.3 ) {
       bullet = null;
+    }
+    if (player.hp < 0){
+      console.log(player.hp)
+      console.log("Player is dead")
     }
   }
 }
@@ -183,11 +188,15 @@ function update2() {
       bullet2.y < player.y + player.height &&
       bullet2.y + bullet2.height > player.y
     ){
-      console.log("damage to player")
       player2.hp = player2.hp - bullet2.damage
+      console.log(player2.hp)
     }
     if (bullet2.x > innerWidth|| bullet2.y > canvas.height /1.3 ) {
       bullet2 = null;
+    }
+    if (player2.hp < 0){
+      console.log(player2.hp)
+      console.log("Player 2 is dead")
     }
   }
 }
@@ -220,15 +229,6 @@ document.addEventListener("keyup", (e) => {
       break;
   }
 });
-
-if (player.hp < 0){
-  console.log(player.hp)
-  console.log("Player is dead")
-}
-else if (player2.hp < 0){
-  console.log(player2.hp)
-  console.log("Player 2 is dead")
-}
 
 // Function to render the game
 function render() {
