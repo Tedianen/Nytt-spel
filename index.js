@@ -5,27 +5,31 @@ const SCREENHEIGHT = innerHeight;
 canvas.height = SCREENHEIGHT;
 canvas.width = SCREENWIDTH;
 
-
+// Get element by id input slider value
 var slider = document.getElementById("myRange");
 var sliderValue = slider.value;
-
+// Event listerner to get input slider value
 slider.addEventListener("input", function() {
   sliderValue = slider.value;
   console.log(sliderValue);
 });
 
+// Get element by id input value
 var slider2 = document.getElementById("myRange2");
 var slider2Value = slider2.value;
-
+// Event listerner to get input slider value
 slider2.addEventListener("input", function() {
   slider2Value = slider2.value;
   console.log(slider2Value);
 });
-
+// Bullets does not exist
 var bullet = null;
 var bullet2 = null;
+// No players are dead
+var deadPlayer = "false";
+var deadPlayer2 = "false";
      
-// Event listener to shoot a bullet when spacebar is pressed
+// Event listener to shoot bullet when Enter is pressed
 document.addEventListener('keydown', function(event) {
   if (event.code === 'Enter') {
   if (!bullet) {
@@ -37,16 +41,15 @@ document.addEventListener('keydown', function(event) {
     color: 'black',
     speedX: 10,
     speedY:5,
-    // gravity: 0.15,
-    gravity: sliderValue,
-    // speedY:0,
-    // gravity: 0,
+    gravity: 0.15 + Math.random() * 0.1,
+    // gravity: sliderValue,
     gravitySpeed:0,
     damage:10,
   };
   }
   console.log("bullet")
   }
+  // Event listener to shoot bullet2 when Spece is pressed
   if (event.code === 'Space') {
   if (!bullet2) {
     bullet2 = {
@@ -57,10 +60,7 @@ document.addEventListener('keydown', function(event) {
       color: 'black',
       speedX: 10,
       speedY:5,
-      // gravity: 0.5,   
-      // gravity: slider2Value,
-      // speedY:0,
-      // gravity: 0.15,
+      gravity: 0.15  + Math.random() * 0.1,
       gravitySpeed:0,
       damage:10,
     };
@@ -81,7 +81,7 @@ let player = {
   height: 50,
   color: "#FFFFFF00",
   dx: 2,
-  hp:200,
+  hp:30,
 };
 // Function to draw the player
 function drawPlayer() {
@@ -103,21 +103,24 @@ function update() {
     bullet.x -= bullet.speedX;
     // bullet.y += bullet.speedY + bullet.gravitySpeed;
     bullet.y += bullet.gravitySpeed - bullet.speedY;
+    // If bullet hits player2, damage player2 and make bullet null
     if (
       bullet.x < player2.x + player2.width &&
       bullet.x + bullet.width > player2.x &&
       bullet.y < player2.y + player2.height &&
       bullet.y + bullet.height > player2.y
     ){
-      player.hp = player.hp - bullet.damage
-      console.log(player.hp)
-    }
-    if (bullet.x < 0 || bullet.y > canvas.height /1.3 ) {
+      player2.hp = player2.hp - bullet.damage
+      console.log(player2.hp)
       bullet = null;
     }
-    if (player.hp < 0){
-      console.log(player.hp)
-      console.log("Player is dead")
+    // Make bullet null if bullet leaves canvas
+    else if (bullet.x < 0 || bullet.y > canvas.height /1.3 ) {
+      bullet = null;
+    }
+    if (player2.hp <= 0){
+      console.log("Player 2 is dead")
+      deadPlayer2 = "true"
     }
   }
 }
@@ -160,7 +163,7 @@ let player2 = {
   height: 50,
   color: 'FFFFFF00',
   dx: 2,
-  hp:200,
+  hp:30,
 };
 // Function to draw the player
 function drawPlayer2() {
@@ -182,21 +185,24 @@ function update2() {
     bullet2.x += bullet2.speedX;
     // bullet2.y += bullet2.speedY + bullet2.gravitySpeed;
     bullet2.y += bullet2.gravitySpeed - bullet2.speedY;
+    // If bullet hits player, damage player and make bullet2 null
     if (
       bullet2.x < player.x + player.width &&
       bullet2.x + bullet2.width > player.x &&
       bullet2.y < player.y + player.height &&
       bullet2.y + bullet2.height > player.y
     ){
-      player2.hp = player2.hp - bullet2.damage
-      console.log(player2.hp)
-    }
-    if (bullet2.x > innerWidth|| bullet2.y > canvas.height /1.3 ) {
+      player.hp = player.hp - bullet2.damage
+      console.log(player.hp)
       bullet2 = null;
     }
-    if (player2.hp < 0){
-      console.log(player2.hp)
+    // Make bullet null if bullet leaves canvas
+    else if (bullet2.x > innerWidth|| bullet2.y > canvas.height /1.3 ) {
+      bullet2 = null;
+    }
+    if (player.hp < 0){
       console.log("Player 2 is dead")
+      deadPlayer = "true"
     }
   }
 }
@@ -230,10 +236,14 @@ document.addEventListener("keyup", (e) => {
   }
 });
 
+let Player2dead = document.getElementById("player2DeadBlock")
+
+
 // Function to render the game
 function render() {
   // Clear the canvas
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 
   // ----------------- Player movement -------------------------
   if (directions.right) {
@@ -276,6 +286,18 @@ function render() {
 
 // Function to run the game loop
 function gameLoop() {
+  if (deadPlayer == "true"){
+    Player2dead.style.display = "block"
+    Player2dead.innerHTML = "Player 2 Wins! Reset?"
+    return;
+   
+  }
+
+  else if (deadPlayer2 == "true"){
+    Player2dead.style.display = "block"
+    Player2dead.innerHTML = "player 1 Wins! Reset?"
+    return;
+  }
   update();
   update2();
   render();
@@ -284,3 +306,6 @@ function gameLoop() {
 
 // Start the game loop
 gameLoop();
+Player2dead.addEventListener("click", ()=>{
+  location.reload();
+})

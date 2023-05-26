@@ -11,7 +11,7 @@ canvas {
   background-size: contain;
   position: fixed;
   left: 0;
-  top: 80;
+  top: 0;
 }
 .logo {
   margin-left: 41%;
@@ -22,4 +22,16 @@ canvas {
 }
 .slidecontainer {
   margin-left: 30%;
+}
+
+#player2DeadBlock {
+  width: 300px;
+  height: 100px;
+  position: absolute;
+  top: 250px;
+  left: 470px;
+  background-color: aqua;
+  display: none;
+  font-size: xx-large;
+  text-align: center;
 }
