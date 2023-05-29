@@ -41,7 +41,7 @@ document.addEventListener('keydown', function(event) {
     color: 'black',
     speedX: 10,
     speedY:5,
-    gravity: 0.15 + Math.random() * 0.1,
+    gravity: 0.1 + Math.random() * 0.4,
     // gravity: sliderValue,
     gravitySpeed:0,
     damage:10,
@@ -60,7 +60,7 @@ document.addEventListener('keydown', function(event) {
       color: 'black',
       speedX: 10,
       speedY:5,
-      gravity: 0.15  + Math.random() * 0.1,
+      gravity: 0.1 + Math.random() * 0.4,
       gravitySpeed:0,
       damage:10,
     };
@@ -118,6 +118,7 @@ function update() {
     else if (bullet.x < 0 || bullet.y > canvas.height /1.3 ) {
       bullet = null;
     }
+    // check if player2 is dead
     if (player2.hp <= 0){
       console.log("Player 2 is dead")
       deadPlayer2 = "true"
@@ -165,7 +166,7 @@ let player2 = {
   dx: 2,
   hp:30,
 };
-// Function to draw the player
+// Function to draw the player2
 function drawPlayer2() {
   ctx.fillStyle = player2.color;
   ctx.fillRect(player2.x, player2.y, player2.width, player2.height);
@@ -179,7 +180,6 @@ function drawBullet2() {
 }
 // Function to update the game state
 function update2() {
-  // Move the bullet
   if (bullet2) {
     bullet2.gravitySpeed += bullet2.gravity;
     bullet2.x += bullet2.speedX;
@@ -200,6 +200,7 @@ function update2() {
     else if (bullet2.x > innerWidth|| bullet2.y > canvas.height /1.3 ) {
       bullet2 = null;
     }
+    // check if player is dead
     if (player.hp < 0){
       console.log("Player 2 is dead")
       deadPlayer = "true"
@@ -275,7 +276,7 @@ function render() {
     player2.x = SCREENWIDTH - player2.width;
   }
 
-  // Draw the player and bullet
+  // Draw the player, player image and bullet
   drawPlayer();
   drawPlayer2();
   drawBullet();
@@ -290,7 +291,6 @@ function gameLoop() {
     Player2dead.style.display = "block"
     Player2dead.innerHTML = "Player 2 Wins! Reset?"
     return;
-   
   }
 
   else if (deadPlayer2 == "true"){
